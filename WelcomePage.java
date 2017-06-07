@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 public class WelcomePage extends AppCompatActivity {
 
+    private Button bLogOut;
+    private Session session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +26,21 @@ public class WelcomePage extends AppCompatActivity {
         final Button bSpot2 = (Button)findViewById(R.id.bSpot2);
         final Button bSpot3 = (Button)findViewById(R.id.bSpot3);
         final Button bSpot4 = (Button)findViewById(R.id.bSpot4);
+
+        session = new Session(this);
+        if(!session.loggedIn()){
+            logout();
+        }
+
+        bLogOut = (Button)findViewById(R.id.bLogOut);
+
+
+        bLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
+        });
 
         bSpot1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,4 +74,12 @@ public class WelcomePage extends AppCompatActivity {
             }
         });
     }
+    private void logout(){
+        session.setLoggedIn(false);
+        finish();
+        startActivity(new Intent(WelcomePage.this, LogInPage.class));
+
+    }
+
 }
+
