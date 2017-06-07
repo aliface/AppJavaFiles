@@ -9,13 +9,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class LogInPage extends AppCompatActivity {
+public class LogInPage extends AppCompatActivity implements View.OnClickListener{
 
-    private static final String TAG = "MainActivity";
-
-    DataBaseHelper mDataBaseHelper;
     private Button bLogin, bRegisterHere;
     private EditText etUsername, etPassword;
+    private DataBaseHelper db;
+    private Session session;
 
     // = new DataBaseHelper(this);
     @Override
@@ -23,19 +22,66 @@ public class LogInPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in_page);
 
+        db = new DataBaseHelper(this);
+        session = new Session(this);
 
-        bLogin = (Button)findViewById(R.id.bLogin);
-        bRegisterHere = (Button)findViewById(R.id.bRegisterHere);
-        etUsername = (EditText)findViewById(R.id.etUsername);
-        etPassword = (EditText)findViewById(R.id.etPassword);
-        mDataBaseHelper = new DataBaseHelper(this);
+        bLogin = (Button) findViewById(R.id.bLogin);
+        bRegisterHere = (Button) findViewById(R.id.bRegisterHere);
+
+        etUsername = (EditText) findViewById(R.id.etUsername);
+        etPassword = (EditText) findViewById(R.id.etPassword);
+
+        bLogin.setOnClickListener(this);
+        bRegisterHere.setOnClickListener(this);
 
 
-        bLogin.setOnClickListener(new View.OnClickListener() {
+        if(session.loggedIn()){
+            startActivity(new Intent(LogInPage.this, WelcomePage.class));
+            finish();
+        }
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.bRegisterHere:
+                startActivity(new Intent(LogInPage.this, RegisterActivity.class));
+                break;
+            case R.id.bLogin:
+                login();
+                break;
+            default:
+
+        }
+    }
+
+    public void login(){
+        String username = etUsername.getText().toString();
+        String password = etPassword.getText().toString();
+
+        if(db.getUser(username,password)){
+            session.setLoggedIn(true);
+            startActivity(new Intent(LogInPage.this, WelcomePage.class));
+            finish();
+        }else{
+            Toast.makeText(getApplicationContext(),"Wrong username/password", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+
+
+
+
+
+
+
+        /*bLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                /*String newEntry = etUsername.getText().toString();
+                *//*String newEntry = etUsername.getText().toString();
                 if(etUsername.length()!=0){
                     AddData(newEntry);
 
@@ -44,7 +90,7 @@ public class LogInPage extends AppCompatActivity {
                 }
 
                 Video example https://www.youtube.com/watch?v=aQAIMY-HzL8
-                */
+                *//*
 
 
 
@@ -88,7 +134,7 @@ public class LogInPage extends AppCompatActivity {
         });
 
     }
-
+*/
    /* public void AddData(String newEntry){
         boolean insertData = mDataBaseHelper.addData(newEntry);
 
