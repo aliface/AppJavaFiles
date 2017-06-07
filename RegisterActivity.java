@@ -9,40 +9,70 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
 
-    DataBaseHelper helper = new DataBaseHelper(this);
+    private Button bRegister;
+    private EditText etName, etUsername, etPassword, etConPass, etCarType, etPlate, etEmail;
+    private DataBaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        final EditText etName = (EditText)findViewById(R.id.etName);
-        final EditText etUsername = (EditText)findViewById(R.id.etUsername);
-        final EditText etPassword = (EditText)findViewById(R.id.etPassword);
-        final EditText etConPass = (EditText)findViewById(R.id.etConPass);
-        final EditText etCarType = (EditText)findViewById(R.id.etCarType);
-        final EditText etPlate = (EditText)findViewById(R.id.etPlate);
-        final EditText etEmail = (EditText)findViewById(R.id.etEmail);
-        final Button bRegister = (Button)findViewById(R.id.bRegister);
 
-        bRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
+        db = new DataBaseHelper(this);
+        etName = (EditText) findViewById(R.id.etName);
+        etUsername = (EditText) findViewById(R.id.etUsername);
+        etPassword = (EditText) findViewById(R.id.etPassword);
+        etConPass = (EditText) findViewById(R.id.etConPass);
+        etCarType = (EditText) findViewById(R.id.etCarType);
+        etPlate = (EditText) findViewById(R.id.etPlate);
+        etEmail = (EditText) findViewById(R.id.etEmail);
+        bRegister = (Button) findViewById(R.id.bRegister);
+
+        bRegister.setOnClickListener(this);
+
+
+    }
+        @Override
             public void onClick(View v) {
-                Intent bRegisterIntent = new Intent(RegisterActivity.this, LogInPage.class);
-                RegisterActivity.this.startActivity(bRegisterIntent);
-
+            switch (v.getId()) {
+                case R.id.bRegister:
+                    register();
+                    break;
+                //can create another case for a log in button
+                /*case R.id.bLogin:
+                    startActivity(new Intent(RegisterActivity.this, LogInPage.class);
+                    finish();
+                    break;
+                */
+                default:
             }
-        });
 
+        }
 
+        private void register() {
+            String name = etName.getText().toString();
+            String username = etUsername.getText().toString();
+            String password = etPassword.getText().toString();
+            String conpassword = etConPass.getText().toString();
+            String cartype = etCarType.getText().toString();
+            String licenseplate = etPlate.getText().toString();
+            String email = etEmail.getText().toString();
 
+            if (name.isEmpty() || username.isEmpty() || password.isEmpty() || conpassword.isEmpty() || cartype.isEmpty() || licenseplate.isEmpty() || email.isEmpty()) {
+                displayToast("Some fields are not filled in");
+            } else {
+                db.addData(name, username, password, cartype, licenseplate, email);
+                displayToast("User registed");
+                finish();
+            }
+        }
+        private void displayToast(String msg) {
+            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
 
-
-
-
-
+        }
 
 
     }
@@ -101,4 +131,4 @@ public class RegisterActivity extends AppCompatActivity {
 
         }
     }*/
-}
+
